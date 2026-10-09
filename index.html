@@ -1,0 +1,626 @@
+
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SryModz | Tactical Menu</title>
+<style>
+:root {
+  --accent: #ff1744;
+  --bg: #08090d;
+  --panel: #11131a;
+  --panel2: #171a23;
+  --text: #f4f5f9;
+  --muted: #8e94a5;
+  --line: #282c38;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  color: var(--text);
+  background:
+    radial-gradient(ellipse at 80% 0%, #25101d 0%, transparent 45%),
+    var(--bg);
+  font-family: Arial, Helvetica, sans-serif;
+}
+header {
+  height: 76px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 25px;
+  border-bottom: 1px solid var(--line);
+  background: rgba(9,10,15,.96);
+}
+.brand {
+  font-size: 25px;
+  font-weight: 900;
+  letter-spacing: 2px;
+}
+.brand span { color: var(--accent); }
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  color: var(--muted);
+  font-size: 12px;
+}
+.live-dot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  background: #42ef9b;
+  border-radius: 50%;
+  margin-right: 6px;
+  box-shadow: 0 0 10px #42ef9b;
+}
+.layout {
+  display: grid;
+  grid-template-columns: 220px minmax(0,1fr);
+  min-height: calc(100vh - 76px);
+}
+aside {
+  padding: 20px 13px;
+  border-right: 1px solid var(--line);
+  background: rgba(10,11,17,.9);
+}
+.nav-label {
+  padding: 10px 12px;
+  color: #626a7c;
+  font-size: 10px;
+  font-weight: bold;
+  letter-spacing: 2px;
+}
+nav button {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 13px 12px;
+  margin: 3px 0;
+  color: #a4a9b8;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 7px;
+  text-align: left;
+  font-size: 13px;
+  cursor: pointer;
+  transition: .18s;
+}
+nav button:hover {
+  background: #17151d;
+  color: white;
+}
+nav button.active {
+  color: white;
+  background: linear-gradient(90deg,#35101c,#19131c);
+  border-color: #642037;
+  box-shadow: inset 3px 0 var(--accent);
+}
+.nav-icon {
+  width: 19px;
+  text-align: center;
+  font-size: 16px;
+}
+.profile {
+  margin: 26px 5px 0;
+  padding: 13px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 9px;
+}
+.profile-name { font-weight: bold; font-size: 13px; }
+.profile-sub { margin-top: 6px; font-size: 11px; color: var(--muted); }
+main { min-width: 0; padding: 27px; }
+.topline {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+h1 { margin: 0; font-size: 27px; letter-spacing: -.5px; }
+.subtitle { margin: 8px 0 0; color: var(--muted); font-size: 13px; }
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 11px;
+  color: #ff8ca4;
+  background: #26111a;
+  border: 1px solid #562033;
+  border-radius: 6px;
+  font-size: 10px;
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+.page { display: none; }
+.page.active { display: block; animation: enter .18s ease-out; }
+@keyframes enter {
+  from { opacity: .45; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3,minmax(0,1fr));
+  gap: 14px;
+  margin: 25px 0;
+}
+.stat {
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: linear-gradient(145deg,var(--panel2),var(--panel));
+}
+.stat-label {
+  color: var(--muted);
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  font-weight: bold;
+}
+.stat-value { margin-top: 12px; font-size: 23px; font-weight: bold; }
+.stat-foot { margin-top: 8px; color: #7b8293; font-size: 11px; }
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2,minmax(0,1fr));
+  gap: 15px;
+  margin-top: 17px;
+}
+.card {
+  padding: 19px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: rgba(17,19,26,.95);
+  min-width: 0;
+}
+.card h3 {
+  margin: 0 0 5px;
+  font-size: 14px;
+}
+.card-desc { color: var(--muted); font-size: 11px; margin-bottom: 12px; }
+.setting {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 46px;
+  border-bottom: 1px solid #242733;
+  font-size: 12px;
+}
+.setting:last-child { border-bottom: 0; }
+.setting-name { font-weight: 600; }
+.setting-note { margin-top: 4px; color: var(--muted); font-size: 10px; }
+input[type=checkbox] {
+  appearance: none;
+  width: 35px;
+  height: 19px;
+  flex: 0 0 35px;
+  border-radius: 20px;
+  background: #343744;
+  position: relative;
+  cursor: pointer;
+  transition: .2s;
+}
+input[type=checkbox]::after {
+  content: "";
+  position: absolute;
+  left: 3px;
+  top: 3px;
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background: #c0c4cf;
+  transition: .2s;
+}
+input[type=checkbox]:checked { background: var(--accent); }
+input[type=checkbox]:checked::after {
+  left: 19px;
+  background: white;
+}
+input[type=range] { accent-color: var(--accent); width: 115px; }
+select, input[type=text] {
+  max-width: 155px;
+  min-width: 90px;
+  padding: 9px;
+  border-radius: 6px;
+  color: white;
+  background: #0a0b11;
+  border: 1px solid #333744;
+  font-size: 11px;
+}
+select:focus, input:focus { outline: 1px solid var(--accent); }
+button, select { cursor: pointer; }
+.primary {
+  background: var(--accent);
+  border: 0;
+  color: white;
+  font-weight: bold;
+  padding: 10px 14px;
+  border-radius: 6px;
+}
+.primary:hover { filter: brightness(1.15); }
+.secondary {
+  background: #20232d;
+  border: 1px solid #373b49;
+  color: white;
+  padding: 10px 14px;
+  border-radius: 6px;
+}
+.wide { width: 100%; margin-top: 14px; }
+.accent-text { color: var(--accent); }
+.progress {
+  height: 5px;
+  margin-top: 12px;
+  background: #292c37;
+  border-radius: 8px;
+  overflow: hidden;
+}
+.progress div {
+  height: 100%;
+  width: 76%;
+  background: var(--accent);
+  box-shadow: 0 0 12px var(--accent);
+}
+.notice {
+  margin-top: 15px;
+  padding: 13px;
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--accent);
+  border-radius: 6px;
+  color: #c0c4d1;
+  background: #13141c;
+  font-size: 12px;
+}
+footer {
+  padding-top: 24px;
+  color: #5f6574;
+  font-size: 10px;
+  letter-spacing: .5px;
+}
+@media(max-width:760px) {
+  .layout { grid-template-columns: 1fr; }
+  aside { padding: 10px; border-right: 0; border-bottom: 1px solid var(--line); }
+  .nav-label, .profile { display: none; }
+  nav { display: flex; overflow-x: auto; gap: 5px; }
+  nav button { width: auto; min-width: max-content; padding: 11px; }
+  main { padding: 18px 13px; }
+  .stats { grid-template-columns: 1fr; gap: 9px; }
+  .stat { padding: 14px; }
+  .stat-value { font-size: 20px; }
+  .grid { grid-template-columns: 1fr; }
+  header { padding: 0 15px; }
+  .header-right { font-size: 10px; }
+}
+@media(prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">Sry<span>Modz</span></div>
+  <div class="header-right">
+    <span><i class="live-dot"></i>SYSTEM READY</span>
+    <span id="clock">00:00:00</span>
+  </div>
+</header>
+
+<div class="layout">
+<aside>
+  <div class="nav-label">MAIN MENU</div>
+  <nav>
+    <button class="active" data-page="home"><span class="nav-icon">⌂</span> Dashboard</button>
+    <button data-page="aim"><span class="nav-icon">◎</span> Aimbot</button>
+    <button data-page="player"><span class="nav-icon">♙</span> Player</button>
+    <button data-page="weapons"><span class="nav-icon">⚔</span> Weapons</button>
+    <button data-page="visuals"><span class="nav-icon">◈</span> Visuals</button>
+    <button data-page="online"><span class="nav-icon">⌁</span> Online</button>
+    <button data-page="world"><span class="nav-icon">◉</span> World & Vehicles</button>
+    <button data-page="settings"><span class="nav-icon">⚙</span> Settings</button>
+  </nav>
+  <div class="profile">
+    <div class="profile-name"><span class="accent-text">●</span> SryModz User</div>
+    <div class="profile-sub">CUSTOM CONFIGURATION</div>
+  </div>
+</aside>
+
+<main>
+<section class="page active" id="home">
+  <div class="topline">
+    <div>
+      <h1>Dashboard</h1>
+      <p class="subtitle">Willkommen zurück. Dein Menü ist bereit.</p>
+    </div>
+    <span class="pill">◆ PREMIUM INTERFACE</span>
+  </div>
+
+  <div class="stats">
+    <div class="stat">
+      <div class="stat-label">CURRENT PROFILE</div>
+      <div class="stat-value" id="profileDisplay">WARZONE</div>
+      <div class="stat-foot">Aktives Menüprofil</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">MENU STATUS</div>
+      <div class="stat-value"><span class="accent-text">READY</span></div>
+      <div class="stat-foot">Konfiguration geladen</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">ACTIVE OPTIONS</div>
+      <div class="stat-value" id="activeCount">03</div>
+      <div class="stat-foot">Aktivierte Interface-Schalter</div>
+    </div>
+  </div>
+
+  <div class="grid">
+    <div class="card">
+      <h3>Game Configuration</h3>
+      <div class="card-desc">Wähle dein Menüprofil</div>
+      <div class="setting">
+        <span>Spielprofil</span>
+        <select id="gameSelect">
+          <option>Warzone</option>
+          <option>GTA V</option>
+          <option>Universal</option>
+        </select>
+      </div>
+      <div class="setting">
+        <span>Profilstatus</span>
+        <span class="accent-text">● ACTIVE</span>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Quick Settings</h3>
+      <div class="card-desc">Schnellzugriff auf Optionen</div>
+      <div class="setting"><span>Menu Overlay</span><input type="checkbox" checked></div>
+      <div class="setting"><span>HUD Elements</span><input type="checkbox" checked></div>
+      <div class="setting"><span>Visual Effects</span><input type="checkbox" checked></div>
+    </div>
+  </div>
+  <div class="notice">SryModz Control Panel <span class="accent-text">/</span> Configuration loaded successfully.</div>
+</section>
+
+<section class="page" id="aim">
+  <div class="topline"><div><h1>Aimbot</h1><p class="subtitle">Target configuration</p></div><span class="pill">AIM SETTINGS</span></div>
+  <div class="grid">
+    <div class="card">
+      <h3>Target Options</h3><div class="card-desc">Zieloptionen und Anzeige</div>
+      <div class="setting"><span>Aimbot Toggle</span><input type="checkbox"></div>
+      <div class="setting"><span>FOV Circle</span><input type="checkbox" checked></div>
+      <div class="setting"><span>Target Line</span><input type="checkbox"></div>
+      <div class="setting"><span>Target Marker</span><input type="checkbox" checked></div>
+    </div>
+    <div class="card">
+      <h3>Target Settings</h3><div class="card-desc">Individuelle Konfiguration</div>
+      <div class="setting"><span>FOV Size</span><input type="range" min="10" max="180" value="90"></div>
+      <div class="setting"><span>Smoothness</span><input type="range" min="1" max="100" value="50"></div>
+      <div class="setting"><span>Target Bone</span><select><option>Head</option><option>Chest</option><option>Body</option></select></div>
+      <div class="setting"><span>Priority</span><select><option>Closest</option><option>Distance</option><option>Custom</option></select></div>
+    </div>
+  </div>
+</section>
+
+<section class="page" id="player">
+  <div class="topline"><div><h1>Player</h1><p class="subtitle">Player configuration</p></div><span class="pill">PLAYER</span></div>
+  <div class="grid">
+    <div class="card">
+      <h3>Player Settings</h3><div class="card-desc">Profiloptionen</div>
+      <div class="setting"><span>Player Name</span><input type="text" value="SryModz"></div>
+      <div class="setting"><span>Custom Tag</span><input type="checkbox" checked></div>
+      <div class="setting"><span>Player HUD</span><input type="checkbox" checked></div>
+      <div class="setting"><span>Status Indicator</span><input type="checkbox" checked></div>
+    </div>
+    <div class="card">
+      <h3>Interface Options</h3><div class="card-desc">Anzeigeeinstellungen</div>
+      <div class="setting"><span>Compact Mode</span><input type="checkbox"></div>
+      <div class="setting"><span>Show Labels</span><input type="checkbox" checked></div>
+      <div class="setting"><span>Widget Scale</span><input type="range" min="50" max="150" value="100"></div>
+    </div>
+  </div>
+</section>
+
+<section class="page" id="weapons">
+  <div class="topline"><div><h1>Weapons</h1><p class="subtitle">Loadout configuration</p></div><span class="pill">LOADOUT</span></div>
+  <div class="grid">
+    <div class="card">
+      <h3>Weapon Profile</h3><div class="card-desc">Loadout auswählen</div>
+      <div class="setting"><span>Weapon Class</span><select><option>Assault Rifle</option><option>SMG</option><option>Sniper Rifle</option><option>Shotgun</option><option>Pistol</option></select></div>
+      <div class="setting"><span>Weapon Label</span><input type="checkbox" checked></div>
+      <div class="setting"><span>Ammo Counter</span><input type="checkbox" checked></div>
+    </div>
+    <div class="card">
+      <h3>HUD Settings</h3><div class="card-desc">Loadout-Anzeige</div>
+      <div class="setting"><span>HUD Scale</span><input type="range" min="50" max="150" value="100"></div>
+      <div class="setting"><span>Accent Highlight</span><input type="checkbox" checked></div>
+      <div class="setting"><span>Compact HUD</span><input type="checkbox"></div>
+    </div>
+  </div>
+</section>
+
+<section class="page" id="visuals">
+  <div class="topline"><div><h1>Visuals</h1><p class="subtitle">Appearance & themes</p></div><span class="pill">CUSTOM LOOK</span></div>
+  <div class="grid">
+    <div class="card">
+      <h3>Color Theme</h3><div class="card-desc">Wähle deine Akzentfarbe</div>
+      <div class="setting"><span>Accent Color</span><select id="accentSelect"><option value="#ff1744">Crimson Red</option><option value="#a855f7">Neon Purple</option><option value="#00d4ff">Cyber Cyan</option><option value="#00e676">Toxic Green</option><option value="#ff9100">Orange</option></select></div>
+      <div class="setting"><span>Animations</span><input id="animations" type="checkbox" checked></div>
+    </div>
+    <div class="card">
+      <h3>Visual Elements</h3><div class="card-desc">Oberflächenoptionen</div>
+      <div class="setting"><span>Glow Effects</span><input type="checkbox" checked></div>
+      <div class="setting"><span>Panel Borders</span><input type="checkbox" checked></div>
+      <div class="setting"><span>Background Effects</span><input type="checkbox" checked></div>
+    </div>
+  </div>
+</section>
+
+<section class="page" id="online">
+  <div class="topline"><div><h1>Online</h1><p class="subtitle">Account & connection settings</p></div><span class="pill">CONNECTION</span></div>
+  <div class="grid">
+    <div class="card">
+      <h3>Account Status</h3><div class="card-desc">Session information</div>
+      <div class="setting"><span>Interface</span><span class="accent-text">READY</span></div>
+      <div class="setting"><span>Profile</span><span>LOCAL USER</span></div>
+      <div class="setting"><span>Session</span><span>ACTIVE</span></div>
+    </div>
+    <div class="card">
+      <h3>Preferences</h3><div class="card-desc">Online-Ansicht</div>
+      <div class="setting"><span>Show Notifications</span><input type="checkbox" checked></div>
+      <div class="setting"><span>Compact Status</span><input type="checkbox"></div>
+    </div>
+  </div>
+</section>
+
+<section class="page" id="world">
+  <div class="topline"><div><h1>World & Vehicles</h1><p class="subtitle">World interface configuration</p></div><span class="pill">WORLD</span></div>
+  <div class="grid">
+    <div class="card">
+      <h3>World Settings</h3><div class="card-desc">HUD elements</div>
+      <div class="setting"><span>Clock Widget</span><input type="checkbox" checked></div>
+      <div class="setting"><span>Coordinate Display</span><input type="checkbox"></div>
+      <div class="setting"><span>Map Frame</span><input type="checkbox" checked></div>
+    </div>
+    <div class="card">
+      <h3>Vehicle Settings</h3><div class="card-desc">Vehicle HUD</div>
+      <div class="setting"><span>Vehicle Widget</span><input type="checkbox" checked></div>
+      <div class="setting"><span>Speed Display</span><input type="checkbox"></div>
+      <div class="setting"><span>Widget Scale</span><input type="range" min="50" max="150" value="100"></div>
+    </div>
+  </div>
+</section>
+
+<section class="page" id="settings">
+  <div class="topline"><div><h1>Settings</h1><p class="subtitle">Menu personalization</p></div><span class="pill">SYSTEM</span></div>
+  <div class="grid">
+    <div class="card">
+      <h3>Appearance</h3><div class="card-desc">Passe dein Menü an</div>
+      <div class="setting"><span>Theme</span><select id="themeSelect"><option value="dark">Dark Tactical</option><option value="midnight">Midnight Blue</option><option value="light">Light</option></select></div>
+      <div class="setting"><span>Custom Accent</span><input type="color" id="customColor" value="#ff1744"></div>
+    </div>
+    <div class="card">
+      <h3>Configuration</h3><div class="card-desc">Speichere deine Einstellungen</div>
+      <button class="primary wide" id="saveButton">SAVE CONFIGURATION</button>
+      <button class="secondary wide" id="resetButton">RESET SETTINGS</button>
+      <div id="saveMessage" class="setting-note"></div>
+    </div>
+  </div>
+</section>
+
+<footer>SRYMODZ CONTROL PANEL <span class="accent-text">/</span> PERSONAL CONFIGURATION</footer>
+</main>
+</div>
+
+<script>
+const buttons = document.querySelectorAll("nav button");
+const pages = document.querySelectorAll(".page");
+
+buttons.forEach(button => {
+  button.addEventListener("click", () => {
+    buttons.forEach(item => item.classList.remove("active"));
+    pages.forEach(page => page.classList.remove("active"));
+    button.classList.add("active");
+    document.getElementById(button.dataset.page).classList.add("active");
+  });
+});
+
+function updateClock() {
+  document.getElementById("clock").textContent =
+    new Date().toLocaleTimeString("de-DE", {hour12:false});
+}
+updateClock();
+setInterval(updateClock, 1000);
+
+const gameSelect = document.getElementById("gameSelect");
+gameSelect.addEventListener("change", () => {
+  document.getElementById("profileDisplay").textContent =
+    gameSelect.value.toUpperCase();
+});
+
+const root = document.documentElement;
+const accentSelect = document.getElementById("accentSelect");
+const customColor = document.getElementById("customColor");
+
+function setAccent(color) {
+  root.style.setProperty("--accent", color);
+  customColor.value = color;
+}
+
+accentSelect.addEventListener("change", () => setAccent(accentSelect.value));
+customColor.addEventListener("input", () => setAccent(customColor.value));
+
+document.getElementById("themeSelect").addEventListener("change", event => {
+  const themes = {
+    dark: ["#08090d","#11131a","#f4f5f9","#8e94a5"],
+    midnight: ["#070d1b","#101b30","#edf4ff","#9caecb"],
+    light: ["#ececf2","#ffffff","#181820","#666677"]
+  };
+  const values = themes[event.target.value];
+  root.style.setProperty("--bg", values[0]);
+  root.style.setProperty("--panel", values[1]);
+  root.style.setProperty("--text", values[2]);
+  root.style.setProperty("--muted", values[3]);
+  document.querySelectorAll(".stat,.card").forEach(el => {
+    el.style.color = values[2];
+  });
+});
+
+document.querySelectorAll('input[type="checkbox"]').forEach(input => {
+  input.addEventListener("change", () => {
+    const count = document.querySelectorAll('input[type="checkbox"]:checked').length;
+    document.getElementById("activeCount").textContent =
+      String(count).padStart(2, "0");
+  });
+});
+
+document.getElementById("animations").addEventListener("change", event => {
+  document.querySelectorAll(".page").forEach(page => {
+    page.style.animation = event.target.checked ? "" : "none";
+  });
+});
+
+function saveConfig() {
+  const data = {
+    game: gameSelect.value,
+    accent: customColor.value,
+    theme: document.getElementById("themeSelect").value
+  };
+  try {
+    localStorage.setItem("srymodz-config", JSON.stringify(data));
+    document.getElementById("saveMessage").textContent =
+      "Configuration saved successfully.";
+  } catch (e) {
+    document.getElementById("saveMessage").textContent =
+      "Unable to save configuration in this browser.";
+  }
+}
+
+document.getElementById("saveButton").addEventListener("click", saveConfig);
+
+document.getElementById("resetButton").addEventListener("click", () => {
+  try { localStorage.removeItem("srymodz-config"); } catch (e) {}
+  location.reload();
+});
+
+try {
+  const data = JSON.parse(localStorage.getItem("srymodz-config") || "null");
+  if (data) {
+    if (data.game) {
+      gameSelect.value = data.game;
+      document.getElementById("profileDisplay").textContent =
+        data.game.toUpperCase();
+    }
+    if (data.accent) {
+      setAccent(data.accent);
+      accentSelect.value = data.accent;
+    }
+    if (data.theme) {
+      document.getElementById("themeSelect").value = data.theme;
+      document.getElementById("themeSelect").dispatchEvent(new Event("change"));
+    }
+  }
+} catch (e) {}
+</script>
+</body>
+</html>
